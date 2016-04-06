@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="../" name="Project">
+
+	<property environment="env" />
+	<property name="debuglevel" value="source,lines,vars" />
+	<property name="target" value="1.7" />
+	<property name="source" value="1.7" />
+
+	<path id="project.classpath">
+		<pathelement location="bin" />
+		<fileset dir="lib">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="init" depends="clean">
+		<mkdir dir="bin" />
+		<mkdir dir="jars" />
+		<copy includeemptydirs="false" todir="bin">
+			<fileset dir="src" excludes="**/*.launch, **/*.java" />
+		</copy>
+	</target>
+
+	<target name="clean">
+		<delete dir="bin" includes="**\*" />
+		<delete dir="jars" includes="**\*" />
+	</target>
+
+
+	<target depends="init" name="buildPA3jar">
+		<echo message="${ant.project.name}: ${ant.file}" />
+		<pathconvert property="classpathProp" refid="project.classpath" />
+		<javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
+			<src path="src" />
+			<classpath refid="project.classpath" />
+		</javac>
+
+		<manifestclasspath property="jar.classpath" jarfile="jars\PA3.jar">
+			<classpath refid="project.classpath" />
+		</manifestclasspath>
+
+		<jar destfile="jars\PA3.jar" basedir="bin">
+			<manifest id="manifest.mf">
+				<attribute name="Main-Class" value="PA3.PA3" />
+				<attribute name="Class-Path" value="${jar.classpath}" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="runPA3" depends="buildPA3jar">
+		<java jar="jars\PA3.jar" fork="true">
+		<arg value="${arg}"/>
+		<arg value="${arg1}"/>
+		</java>
+	</target>
+
+	
+	<target depends="init" name="buildEvaluationjar">
+		<echo message="${ant.project.name}: ${ant.file}" />
+		<pathconvert property="classpathProp" refid="project.classpath" />
+		<javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
+			<src path="src" />
+			<classpath refid="project.classpath" />
+		</javac>
+
+		<manifestclasspath property="jar.classpath" jarfile="jars\Evaluation.jar">
+			<classpath refid="project.classpath" />
+		</manifestclasspath>
+
+		<jar destfile="jars\Evaluation.jar" basedir="bin">
+			<manifest id="manifest.mf">
+				<attribute name="Main-Class" value="PA3.Evaluation" />
+				<attribute name="Class-Path" value="${jar.classpath}" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="runEvaluation" depends="buildEvaluationjar">
+		<java jar="jars\Evaluation.jar" fork="true">
+		<arg value="${arg}"/>
+		<arg value="${arg1}"/>
+		<arg value="${arg2}"/>
+		
+		</java>
+	</target>
+
+
+</project>

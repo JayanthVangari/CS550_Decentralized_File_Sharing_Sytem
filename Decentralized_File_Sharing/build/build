@@ -1,0 +1,5 @@
+@echo off
+
+echo "Executing the Target " %1%
+
+ ant -f build.xml %1%
